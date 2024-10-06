@@ -13,8 +13,8 @@ interface Address {
 
 interface Company {
 	name: string;
-	catchPhrase: string;
-	bs: string;
+	catchPhrase?: string;
+	bs?: string;
 }
 
 interface User {
@@ -28,4 +28,21 @@ interface User {
 	company: Company;
 }
 
-export type { User, Geo, Address, Company };
+interface UserModalProps {
+	data: User | null;
+	isOpen: boolean;
+	onSubmit: () => void;
+	onClose: () => void;
+	onSubmitHandler: (data: User) => void;
+}
+
+interface FieldType {
+	name: string;
+	lable: string;
+	type: string | number;
+	placeholder: string;
+	required: boolean;
+	value: string;
+}
+
+export type { User, Geo, Address, Company, UserModalProps, FieldType };

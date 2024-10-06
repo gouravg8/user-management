@@ -1,10 +1,13 @@
 import { z } from "zod";
+
+const domainRegex =
+	/^(?!:\/\/)([a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]+)*\.[a-zA-Z]{2,})$/;
 const userSchema = z.object({
 	name: z.string().min(3, "Name must be at least 3 characters long"),
 	email: z.string().email("Invalid email address"),
 	phone: z
 		.string()
-		.regex(/^[0-9]+$/, "Invalid phone number")
+		// .regex(/^[0-9]+$/, "Invalid phone number")
 		.min(10, "Phone number must be at least 10 digits"),
 	username: z.string().min(3, "Username must be at least 3 characters long"),
 	address: z.object({
@@ -19,8 +22,8 @@ const userSchema = z.object({
 
 	website: z
 		.string()
+		.regex(domainRegex, "Invalid website")
 		.min(4, "Url must be appropriate length")
-		.url("Invalid url")
 		.optional(),
 });
 

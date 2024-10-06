@@ -1,5 +1,10 @@
 import type React from "react";
 import { Link, useLoaderData } from "react-router-dom";
+import { ModalOpner } from "./Modal";
+import axios from "axios";
+import type { SubmitHandler } from "react-hook-form";
+import type { FormDataType } from "../types/zodSchema";
+import { useEffect, useState } from "react";
 
 interface User {
 	id: number;
@@ -22,11 +27,20 @@ interface User {
 }
 
 const DetailedUser: React.FC = () => {
-	const { data: user } = useLoaderData() as { data: User };
+	const userLoadedData = useLoaderData() as User;
 
-	const handleEdit = (id: number) => {
-		// Add your edit logic here
-		console.log("Edit user with id:", id);
+	const [user, setUserData] = useState<User>(userLoadedData);
+	useEffect(() => {
+		setUserData(user);
+	}, [user]);
+
+	const onSubmitHandler: SubmitHandler<FormDataType> = async (data) => {
+		const updateData = await axios.put(
+			`https://jsonplaceholder.typicode.com/users/${user.id}`,
+			{ id: user.id, ...data },
+		);
+		setUserData(updateData.data);
+		console.log({ updateData });
 	};
 
 	const handleDelete = (id: number) => {
@@ -39,9 +53,9 @@ const DetailedUser: React.FC = () => {
 	}
 
 	return (
-		<div className="w-full h-screen mx-auto py-16 bg-slate-800">
-			<Link to="/" className="hover:underline">
-				<h1 className="font-semibold text-white border w-fit mx-auto border-orange-800 bg-orange-600 px-4 py-2 rounded-full mb-8">
+		<div className="w-full h-screen mx-auto py-16 bg-slate-800 flex flex-col gap-8">
+			<Link to="/" className="hover:underline w-fit mx-auto">
+				<h1 className="font-semibold text-white w-fit border border-orange-800 bg-orange-600 px-4 py-2 rounded-full">
 					User management
 				</h1>
 			</Link>
@@ -81,16 +95,15 @@ const DetailedUser: React.FC = () => {
 					</p>
 				</div>
 				<div className="flex justify-arounds align-middle w-full ">
+					<ModalOpner
+						modalTitle="Edit"
+						data={user}
+						classNames="bg-slate-900 hover:bg-slate-950 text-white px-4 py-4 w-1/2"
+						onSubmitHandler={onSubmitHandler}
+					/>
 					<button
 						type="button"
-						className="text-white bg-slate-900 hover:bg-slate-950 px-4 py-2 w-1/2"
-						onClick={() => handleEdit(user.id)}
-					>
-						Edit
-					</button>
-					<button
-						type="button"
-						className="bg-slate-900 hover:bg-slate-950  text-white px-4 py-3 w-1/2"
+						className="bg-slate-900 hover:bg-slate-950 text-white px-4 py-3 w-1/2"
 						onClick={() => handleDelete(user.id)}
 					>
 						Delete
