@@ -5,6 +5,7 @@ import axios from "axios";
 import type { SubmitHandler } from "react-hook-form";
 import type { FormDataType } from "../types/zodSchema";
 import { useEffect, useState } from "react";
+import { RiArrowLeftLine } from "react-icons/ri";
 
 interface User {
 	id: number;
@@ -55,8 +56,8 @@ const DetailedUser: React.FC = () => {
 	return (
 		<div className="w-full h-screen mx-auto py-16 bg-slate-800 flex flex-col gap-8">
 			<Link to="/" className="hover:underline w-fit mx-auto">
-				<h1 className="font-semibold text-white w-fit border border-orange-800 bg-orange-600 px-4 py-2 rounded-full">
-					User management
+				<h1 className="flex items-center gap-1 font-semibold text-white w-fit border border-orange-800 bg-orange-600 px-4 py-2 rounded-full">
+					<RiArrowLeftLine /> User management
 				</h1>
 			</Link>
 			<div className="w-11/12 mx-auto bg-slate-700 shadow-lg rounded-lg overflow-hidden text-white">

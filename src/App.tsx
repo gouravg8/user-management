@@ -1,25 +1,23 @@
 import "./App.css";
 import Table from "./components/Table";
 import { ModalOpner } from "./components/Modal";
-import { useLoaderData } from "react-router-dom";
 import type { User } from "./types";
 import axios from "axios";
 import type { SubmitHandler } from "react-hook-form";
 import type { FormDataType } from "./types/zodSchema";
-import { useEffect, useState } from "react";
-// import Userapp from "./components/Userapp";
+import { useRecoilState } from "recoil";
+import { usersSelector } from "./states";
 
 function App() {
-	const dataLoaded = useLoaderData() as User[];
-	const [users, setUsers] = useState<User[]>(dataLoaded);
-	useEffect(() => setUsers(dataLoaded), [dataLoaded]);
+	const [dataSelector, setDataSelector] = useRecoilState(usersSelector);
 
 	const onSubmitHandler: SubmitHandler<FormDataType> = async (data) => {
 		const postData = await axios.post(
 			"https://jsonplaceholder.typicode.com/users",
 			data,
 		);
-		console.log({ postData });
+		setDataSelector((prev: User[]) => [...prev, postData.data]);
+		console.log({ dataSelector, postdata: postData.data });
 	};
 
 	return (
@@ -27,7 +25,7 @@ function App() {
 			<h1 className="font-semibold text-white border w-fit mx-auto border-orange-800 bg-orange-600 px-4 py-2 rounded-full">
 				User management
 			</h1>
-			<Table users={users} />
+			<Table users={dataSelector} />
 			<ModalOpner
 				modalTitle="Create User"
 				data={null}

@@ -9,7 +9,7 @@ async function getUsers() {
 
 		const users = res.data.map((user) => ({
 			...user,
-			phone: user.phone.split(" ")[0].replace(/-/g, ""),
+			phone: user.phone.split(" ")[0].replace(/[.\-()]/g, ""),
 		}));
 		return users;
 	} catch (error) {
@@ -24,7 +24,7 @@ async function getUserDetails(userId: number) {
 		);
 		const user = {
 			...res.data,
-			phone: res.data.phone.split(" ")[0].replace(/-/g, ""),
+			phone: res.data.phone.split(" ")[0].replace(/[.\-()]/g, ""),
 		};
 		return user;
 	} catch (error) {

@@ -1,12 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useRef, useState, useEffect } from "react";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { type FormDataType, userSchema } from "../types/zodSchema";
 import { Modal } from "./Modal";
 import type { UserModalProps, User, FieldType } from "../types";
 
-const initialUserModalData: User = {
+export const initialUserModalData: User = {
 	id: 0,
 	name: "",
 	email: "",
@@ -92,7 +91,7 @@ const UserModalForm: React.FC<UserModalProps> = ({
 		},
 
 		{
-			name: "company",
+			name: "company.name",
 			lable: "Company",
 			type: "text",
 			placeholder: "Enter your company name",
@@ -155,7 +154,7 @@ const UserModalForm: React.FC<UserModalProps> = ({
 			<form
 				onSubmit={handleSubmit(async () => {
 					setDataSubmitLoading(true);
-					await onSubmitHandler(formState);
+					onSubmitHandler(formState);
 					setDataSubmitLoading(false);
 					onSubmit();
 				})}
@@ -178,7 +177,7 @@ const UserModalForm: React.FC<UserModalProps> = ({
 									| "email"
 									| "phone"
 									| "username"
-									| "companyName"
+									| "company.name"
 									| "website"
 									| "address.street"
 									| "address.city",

@@ -12,6 +12,7 @@ import {
 import DetailedUser from "./components/DetailedUser.tsx";
 import { getUserDetails, getUsers } from "./utils/getUsers.ts";
 import ErrorPage from "./components/Error.tsx";
+import { RecoilRoot } from "recoil";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -32,6 +33,8 @@ createRoot(
 	document.getElementById("root") || document.createElement("div"),
 ).render(
 	<StrictMode>
-		<RouterProvider router={router} />
+		<RecoilRoot>
+			<RouterProvider router={router} />
+		</RecoilRoot>
 	</StrictMode>,
 );

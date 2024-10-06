@@ -14,10 +14,12 @@ const userSchema = z.object({
 		street: z.string().min(3, "Street must be at least 3 characters long"),
 		city: z.string().min(3, "City must be at least 3 characters long"),
 	}),
-	companyName: z
-		.string()
-		.min(3, "Company name must be at least 3 characters long")
-		.optional(),
+	company: z.object({
+		name: z
+			.string()
+			.min(3, "Company name must be at least 3 characters long")
+			.optional(),
+	}),
 	// website is optional and if provided, it must be a valid URL
 
 	website: z
