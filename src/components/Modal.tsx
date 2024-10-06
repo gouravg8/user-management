@@ -1,6 +1,8 @@
 import type React from "react";
 import { useState, useEffect, useRef } from "react";
 import type { Address } from "../types";
+import "./styles/Modal.css";
+import { RiCloseLine } from "react-icons/ri";
 
 interface ModalProps {
 	isOpen: boolean;
@@ -17,12 +19,17 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
 	const [isModalOpen, setModalOpen] = useState(isOpen);
 	const modalRef = useRef<HTMLDialogElement | null>(null);
+	const [isAnimating, setIsAnimating] = useState(false);
 
 	const handleCloseModal = () => {
-		if (onClose) {
-			onClose();
-		}
-		setModalOpen(false);
+		setIsAnimating(true);
+		setTimeout(() => {
+			if (onClose) {
+				onClose();
+			}
+
+			setModalOpen(false);
+		}, 100);
 	};
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
@@ -33,6 +40,7 @@ const Modal: React.FC<ModalProps> = ({
 
 	useEffect(() => {
 		setModalOpen(isOpen);
+		if (isOpen) setIsAnimating(true);
 	}, [isOpen]);
 
 	useEffect(() => {
@@ -51,23 +59,25 @@ const Modal: React.FC<ModalProps> = ({
 		<dialog
 			ref={modalRef}
 			onKeyDown={handleKeyDown}
-			className="p-4 rounded-lg w-3/4"
+			className={`modal-overlay ${isModalOpen ? "open" : "close"} p-4 bg-slate-700 text-white w-11/12 rounded-lg relative`}
 		>
-			{children}
-			{hasCloseBtn && (
-				<button
-					type="button"
-					className="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300"
-					onClick={handleCloseModal}
-				>
-					Close
-				</button>
-			)}
+			<div className={`modal-content ${isModalOpen ? "open" : "close"}`}>
+				{hasCloseBtn && (
+					<button
+						type="button"
+						className="absolute top-3 right-3 float-end text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300"
+						onClick={handleCloseModal}
+					>
+						<RiCloseLine size={24} />
+					</button>
+				)}
+				{children}
+			</div>
 		</dialog>
 	);
 };
 
-interface NewsletterModalData {
+interface UserModalData {
 	name: string;
 	email: string;
 	phone: number;
@@ -77,7 +87,7 @@ interface NewsletterModalData {
 	website: string;
 }
 
-const initialNewsletterModalData: NewsletterModalData = {
+const initialUserModalData: UserModalData = {
 	name: "",
 	email: "",
 	phone: 0,
@@ -90,9 +100,9 @@ const initialNewsletterModalData: NewsletterModalData = {
 	website: "",
 };
 
-interface NewsletterModalProps {
+interface UserModalProps {
 	isOpen: boolean;
-	onSubmit: (data: NewsletterModalData) => void;
+	onSubmit: (data: UserModalData) => void;
 	onClose: () => void;
 }
 
@@ -105,15 +115,10 @@ interface FieldType {
 	value: string;
 }
 
-const NewsletterModal: React.FC<NewsletterModalProps> = ({
-	onSubmit,
-	isOpen,
-	onClose,
-}) => {
+const UserModal: React.FC<UserModalProps> = ({ onSubmit, isOpen, onClose }) => {
 	const focusInputRef = useRef<HTMLInputElement | null>(null);
-	const [formState, setFormState] = useState<NewsletterModalData>(
-		initialNewsletterModalData,
-	);
+	const [formState, setFormState] =
+		useState<UserModalData>(initialUserModalData);
 
 	const fields: FieldType[] = [
 		{
@@ -187,7 +192,7 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({
 		if (isOpen && focusInputRef.current) {
 			setTimeout(() => {
 				focusInputRef.current?.focus();
-			}, 0);
+			}, 300);
 		}
 	}, [isOpen]);
 
@@ -202,23 +207,25 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({
 	const handleSubmit = (event: React.FormEvent): void => {
 		event.preventDefault();
 		onSubmit(formState);
-		setFormState(initialNewsletterModalData);
+		setFormState(initialUserModalData);
 	};
 
 	return (
 		<Modal hasCloseBtn={true} isOpen={isOpen} onClose={onClose}>
 			<form
 				onSubmit={handleSubmit}
-				className="flex flex-col justify-center align-middle gap-4"
+				className="flex flex-col justify-center align-middle gap-4 mt-8"
 			>
 				{fields.map((field: FieldType) => (
 					<div
 						key={field.name}
 						className="flex flex-col justify-center align-middle"
 					>
-						<label htmlFor={field.name}>{field.lable}</label>
+						<label className="font-medium" htmlFor={field.name}>
+							{field.lable}
+						</label>
 						<input
-							className="border border-slate-400 rounded-md px-2 py-1"
+							className="border-0 rounded-md px-3 py-1.5 bg-slate-800 placeholder:text-sm"
 							ref={focusInputRef}
 							type={field.type}
 							name={field.name}
@@ -243,46 +250,44 @@ const NewsletterModal: React.FC<NewsletterModalProps> = ({
 };
 
 const ModalCompo = ({ modalTitle }: { modalTitle: string }) => {
-	const [isNewsletterModalOpen, setNewsletterModalOpen] =
-		useState<boolean>(false);
-	const [newsletterFormData, setNewsletterFormData] =
-		useState<NewsletterModalData | null>(null);
+	const [isUserModalOpen, setUserModalOpen] = useState<boolean>(false);
+	const [userFormData, setUserFormData] = useState<UserModalData | null>(null);
 
-	const handleOpenNewsletterModal = () => {
-		setNewsletterModalOpen(true);
+	const handleOpenUserModal = () => {
+		setUserModalOpen(true);
 	};
 
-	const handleCloseNewsletterModal = () => {
-		setNewsletterModalOpen(false);
+	const handleCloseUserModal = () => {
+		setUserModalOpen(false);
 	};
 
-	const handleFormSubmit = (data: NewsletterModalData): void => {
-		setNewsletterFormData(data);
-		handleCloseNewsletterModal();
+	const handleFormSubmit = (data: UserModalData): void => {
+		setUserFormData(data);
+		handleCloseUserModal();
 	};
 
 	return (
 		<>
 			<div style={{ display: "flex", gap: "1em" }}>
 				<button
-					className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 focus:outline-none focus:ring focus:ring-red-300"
+					className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 focus:outline-none focus:ring focus:ring-red-300 fixed bottom-4 left-1/2 -translate-x-12"
 					type="button"
-					onClick={handleOpenNewsletterModal}
+					onClick={handleOpenUserModal}
 				>
 					{modalTitle}
 				</button>
 			</div>
 
-			{newsletterFormData && (
+			{userFormData && (
 				<div className="msg-box">
-					<b>{JSON.stringify(newsletterFormData)}</b>
+					<b>{JSON.stringify(userFormData)}</b>
 				</div>
 			)}
 
-			<NewsletterModal
-				isOpen={isNewsletterModalOpen}
+			<UserModal
+				isOpen={isUserModalOpen}
 				onSubmit={handleFormSubmit}
-				onClose={handleCloseNewsletterModal}
+				onClose={handleCloseUserModal}
 			/>
 		</>
 	);

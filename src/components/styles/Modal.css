@@ -1,0 +1,36 @@
+.modal-overlay.close {
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+	animation: slidedown 0.3s ease-in-out;
+}
+
+.modal-content {
+	opacity: 0;
+}
+
+.modal-content.open {
+	opacity: 1;
+}
+
+@keyframes slidedown {
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(100%);
+	}
+}
+
+.modal-overlay.open {
+	opacity: 1;
+	animation: slideup 0.3s ease-in-out;
+}
+
+@keyframes slideup {
+	0% {
+		transform: translateY(40%);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
