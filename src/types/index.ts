@@ -5,10 +5,10 @@ interface Geo {
 
 interface Address {
 	street: string;
-	// suite: string;
+	suite?: string;
 	city: string;
-	// zipcode: string;
-	// geo: Geo;
+	zipcode?: string;
+	geo?: Geo;
 }
 
 interface Company {

@@ -1,6 +1,6 @@
 import "./App.css";
 import Table from "./components/Table";
-import ModalCompo from "./components/Modal";
+import { ModalCompo } from "./components/Modal";
 import { useLoaderData } from "react-router-dom";
 import type { User } from "./types";
 // import Userapp from "./components/Userapp";
@@ -18,4 +18,5 @@ function App() {
 			{/* <DetailedUser /> */}
 		</div>
 	);
-}export default App;
+}
+export default App;

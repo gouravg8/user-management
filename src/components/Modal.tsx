@@ -3,6 +3,10 @@ import { useState, useEffect, useRef } from "react";
 import type { Address } from "../types";
 import "./styles/Modal.css";
 import { RiCloseLine } from "react-icons/ri";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type FormDataType, userSchema } from "../types/zodSchema";
+import axios from "axios";
 
 interface ModalProps {
 	isOpen: boolean;
@@ -102,23 +106,36 @@ const initialUserModalData: UserModalData = {
 
 interface UserModalProps {
 	isOpen: boolean;
-	onSubmit: (data: UserModalData) => void;
+	onSubmit: () => void;
 	onClose: () => void;
 }
 
 interface FieldType {
 	name: string;
 	lable: string;
-	type: string;
+	type: string | number;
 	placeholder: string;
 	required: boolean;
 	value: string;
 }
 
-const UserModal: React.FC<UserModalProps> = ({ onSubmit, isOpen, onClose }) => {
+const UserModalForm: React.FC<UserModalProps> = ({
+	onSubmit,
+	isOpen,
+	onClose,
+}) => {
 	const focusInputRef = useRef<HTMLInputElement | null>(null);
 	const [formState, setFormState] =
 		useState<UserModalData>(initialUserModalData);
+	const [dataSubmitLoading, setDataSubmitLoading] = useState(false);
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FormDataType>({
+		resolver: zodResolver(userSchema),
+	});
 
 	const fields: FieldType[] = [
 		{
@@ -154,7 +171,7 @@ const UserModal: React.FC<UserModalProps> = ({ onSubmit, isOpen, onClose }) => {
 			value: formState.username,
 		},
 		{
-			name: "street",
+			name: "address.street",
 			lable: "Street",
 			type: "text",
 			placeholder: "Enter your address(Street)",
@@ -162,7 +179,7 @@ const UserModal: React.FC<UserModalProps> = ({ onSubmit, isOpen, onClose }) => {
 			value: formState.address.street,
 		},
 		{
-			name: "city",
+			name: "address.city",
 			lable: "City",
 			type: "text",
 			placeholder: "Enter your address(city)",
@@ -198,22 +215,41 @@ const UserModal: React.FC<UserModalProps> = ({ onSubmit, isOpen, onClose }) => {
 
 	const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
-		setFormState((prevFormData) => ({
-			...prevFormData,
-			[name]: value,
-		}));
+		setFormState((prevFormData) => {
+			if (name.includes(".")) {
+				const [parent, child] = name.split(".");
+				return {
+					...prevFormData,
+					[parent]: {
+						...(prevFormData[
+							parent as keyof UserModalData
+						] as unknown as Record<string, unknown>),
+						[child]: value,
+					},
+				};
+			}
+			return {
+				...prevFormData,
+				[name]: value,
+			};
+		});
 	};
 
-	const handleSubmit = (event: React.FormEvent): void => {
-		event.preventDefault();
-		onSubmit(formState);
-		setFormState(initialUserModalData);
+	const onSubmitHandler: SubmitHandler<FormDataType> = async (data) => {
+		setDataSubmitLoading(true);
+		const postData = await axios.post(
+			"https://jsonplaceholder.typicode.com/users",
+			data,
+		);
+		setDataSubmitLoading(false);
+		console.log({ postData });
+		onSubmit();
 	};
 
 	return (
 		<Modal hasCloseBtn={true} isOpen={isOpen} onClose={onClose}>
 			<form
-				onSubmit={handleSubmit}
+				onSubmit={handleSubmit(onSubmitHandler)}
 				className="flex flex-col justify-center align-middle gap-4 mt-8"
 			>
 				{fields.map((field: FieldType) => (
@@ -226,22 +262,36 @@ const UserModal: React.FC<UserModalProps> = ({ onSubmit, isOpen, onClose }) => {
 						</label>
 						<input
 							className="border-0 rounded-md px-3 py-1.5 bg-slate-800 placeholder:text-sm"
-							ref={focusInputRef}
-							type={field.type}
-							name={field.name}
+							type={field.type as React.HTMLInputTypeAttribute}
+							{...register(
+								field.name as
+									| "name"
+									| "email"
+									| "phone"
+									| "username"
+									| "companyName"
+									| "website"
+									| "address.street"
+									| "address.city",
+							)}
 							value={field.value}
 							onChange={handleInputChange}
 							placeholder={field.placeholder}
 							required={field.required}
 						/>
+						{errors[field.name as keyof FormDataType] && (
+							<p className="text-red-500 text-sm mt-1">
+								{errors[field.name as keyof FormDataType]?.message}
+							</p>
+						)}
 					</div>
-				))}
+				))}{" "}
 				<div className="">
 					<button
-						className="w-full mx-auto text-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-red-300 mb-2 mt-4"
+						className="w-full mx-auto text-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-2 mt-4"
 						type="submit"
 					>
-						Submit
+						{dataSubmitLoading ? "loading..." : "Submit"}
 					</button>
 				</div>
 			</form>
@@ -251,7 +301,6 @@ const UserModal: React.FC<UserModalProps> = ({ onSubmit, isOpen, onClose }) => {
 
 const ModalCompo = ({ modalTitle }: { modalTitle: string }) => {
 	const [isUserModalOpen, setUserModalOpen] = useState<boolean>(false);
-	const [userFormData, setUserFormData] = useState<UserModalData | null>(null);
 
 	const handleOpenUserModal = () => {
 		setUserModalOpen(true);
@@ -261,8 +310,7 @@ const ModalCompo = ({ modalTitle }: { modalTitle: string }) => {
 		setUserModalOpen(false);
 	};
 
-	const handleFormSubmit = (data: UserModalData): void => {
-		setUserFormData(data);
+	const handleFormSubmit = (): void => {
 		handleCloseUserModal();
 	};
 
@@ -278,13 +326,7 @@ const ModalCompo = ({ modalTitle }: { modalTitle: string }) => {
 				</button>
 			</div>
 
-			{userFormData && (
-				<div className="msg-box">
-					<b>{JSON.stringify(userFormData)}</b>
-				</div>
-			)}
-
-			<UserModal
+			<UserModalForm
 				isOpen={isUserModalOpen}
 				onSubmit={handleFormSubmit}
 				onClose={handleCloseUserModal}
@@ -293,4 +335,4 @@ const ModalCompo = ({ modalTitle }: { modalTitle: string }) => {
 	);
 };
 
-export default ModalCompo;
+export { ModalCompo, Modal };
