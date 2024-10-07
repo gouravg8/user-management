@@ -71,7 +71,7 @@ function App() {
 						handleReload();
 					}
 				}}
-				className="flex gap-1 items-center font-semibold text-white border w-fit mx-auto border-orange-800 bg-orange-600 px-4 py-2 rounded-full mt-12 z-20"
+				className="flex gap-1 items-center md:cursor-pointer font-semibold text-white border w-fit mx-auto border-orange-800 bg-orange-600 px-4 py-2 rounded-full mt-12 z-20"
 			>
 				<IoReload />
 				User management

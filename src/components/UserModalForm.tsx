@@ -158,7 +158,7 @@ const UserModalForm: React.FC<UserModalProps> = ({
 							{field.lable}
 						</label>
 						<input
-							className="border-0 rounded-md px-3 py-1.5 bg-slate-800 placeholder:text-sm"
+							className="border-0 rounded-md px-3 py-1.5 bg-slate-800 placeholder:text-sm md:py-2"
 							type={field.type as React.HTMLInputTypeAttribute}
 							{...register(
 								field.name as

@@ -57,7 +57,7 @@ const Modal: React.FC<ModalProps> = ({
 		<dialog
 			ref={modalRef}
 			onKeyDown={handleKeyDown}
-			className={`modal-overlay ${isModalOpen ? "open" : "close"} p-4 bg-slate-700 text-white w-11/12 rounded-lg relative`}
+			className={`modal-overlay ${isModalOpen ? "open" : "close"} p-4 bg-slate-700 text-white w-11/12 rounded-lg relative md:w-1/2`}
 		>
 			<div className={`modal-content ${isModalOpen ? "open" : "close"}`}>
 				{hasCloseBtn && (

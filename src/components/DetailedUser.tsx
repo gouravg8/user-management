@@ -6,7 +6,7 @@ import type { FormDataType } from "../types/zodSchema";
 import { useEffect, useState } from "react";
 import { RiArrowLeftLine } from "react-icons/ri";
 import type { User } from "../types";
-import Skeleton from "./Skeleton";
+import Skeleton from "./DetailedUserSkeleton";
 import Search from "./Search";
 import UserInfoItem from "./UserInfoItem";
 
@@ -74,7 +74,7 @@ const DetailedUser: React.FC = () => {
 					<RiArrowLeftLine /> User management
 				</h1>
 			</Link>
-			<div className="w-11/12 mx-auto bg-slate-700 shadow-lg rounded-lg overflow-hidden text-white">
+			<div className="w-11/12 md:p-8 md:w-1/2 mx-auto bg-slate-700 shadow-lg rounded-lg overflow-hidden text-white">
 				{isLoading ? (
 					<Skeleton />
 				) : (
