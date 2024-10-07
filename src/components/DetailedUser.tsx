@@ -66,9 +66,9 @@ const DetailedUser: React.FC = () => {
 	}
 
 	return (
-		<div className="w-full h-screen mx-auto py-16 bg-slate-800 flex flex-col gap-8">
+		<div className="w-full min-h-screen mx-auto py-16 bg-slate-800 flex flex-col gap-8">
 			<Search />
-			<Link to="/" className="w-fit mx-auto mt-12">
+			<Link to="/" className="w-fit mx-auto mt-6">
 				<h1 className="flex items-center gap-1 font-semibold text-white w-fit border border-orange-800 bg-orange-600 px-4 py-2 rounded-full">
 					<RiArrowLeftLine /> User management
 				</h1>

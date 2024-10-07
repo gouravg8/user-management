@@ -63,7 +63,7 @@ const Search: React.FC = () => {
 			{isInputFocused && (
 				<div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40" />
 			)}
-			<div className="w-11/12 max-w-md mx-auto fixed top-8 left-1/2 transform -translate-x-1/2 z-50">
+			<div className="w-11/12 max-w-md mx-auto fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
 				<div className="relative">
 					<input
 						type="text"
