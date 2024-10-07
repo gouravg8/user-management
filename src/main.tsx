@@ -10,9 +10,10 @@ import {
 	Route,
 } from "react-router-dom";
 import DetailedUser from "./components/DetailedUser.tsx";
-import { getUserDetails, getUsers } from "./utils/getUsers.ts";
+import { getUsers } from "./utils/getUsers.ts";
 import ErrorPage from "./components/Error.tsx";
 import { RecoilRoot } from "recoil";
+import type { User } from "./types/index.ts";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -22,7 +23,9 @@ const router = createBrowserRouter(
 				path="user/:userId"
 				element={<DetailedUser />}
 				loader={async ({ params }) =>
-					await getUserDetails(Number(params.userId))
+					JSON.parse(localStorage.getItem("users") || "[]").filter(
+						(user: User) => user.id === Number(params.userId),
+					)
 				}
 			/>
 		</Route>,

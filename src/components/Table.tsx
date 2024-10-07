@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import type { User } from "../types";
 
-const Table = ({ users }: { users: User[] }) => {
+const Table = () => {
+	const users = JSON.parse(localStorage.getItem("users") || "[]");
 	return (
 		<div className="w-11/12 px-2 bg-slate-700 py-4 mx-4 text-white items-center rounded">
 			<table className="w-full mx-auto">

@@ -1,10 +1,9 @@
 import type React from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ModalOpner } from "./Modal";
-import axios from "axios";
 import type { SubmitHandler } from "react-hook-form";
 import type { FormDataType } from "../types/zodSchema";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RiArrowLeftLine } from "react-icons/ri";
 
 interface User {
@@ -28,25 +27,44 @@ interface User {
 }
 
 const DetailedUser: React.FC = () => {
-	const userLoadedData = useLoaderData() as User;
+	const { userId } = useParams();
+	const navigate = useNavigate();
+	const usersFromLocalStorage = JSON.parse(
+		localStorage.getItem("users") || "[]",
+	);
+	const [user, setUserData] = useState<User>();
+	const filtredUser = useMemo(
+		() => usersFromLocalStorage.find((u: User) => u.id === Number(userId)),
+		[usersFromLocalStorage, userId],
+	);
 
-	const [user, setUserData] = useState<User>(userLoadedData);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		setUserData(user);
-	}, [user]);
+		if (filtredUser) {
+			filtredUser.phone = filtredUser.phone
+				.split(" ")[0]
+				.replace(/[\-.()]/g, "");
+		}
+		setUserData(filtredUser);
+	}, []);
 
 	const onSubmitHandler: SubmitHandler<FormDataType> = async (data) => {
-		const updateData = await axios.put(
-			`https://jsonplaceholder.typicode.com/users/${user.id}`,
-			{ id: user.id, ...data },
+		const updatedUsers = usersFromLocalStorage.map((user: User) =>
+			user.id === data.id ? data : user,
 		);
-		setUserData(updateData.data);
-		console.log({ updateData });
+		localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+		setUserData(data as User);
+		console.log({ data });
 	};
 
 	const handleDelete = (id: number) => {
-		// Add your delete logic here
 		console.log("Delete user with id:", id);
+		const updatedUsers = usersFromLocalStorage.filter(
+			(user: User) => user.id !== id,
+		);
+		localStorage.setItem("users", JSON.stringify(updatedUsers));
+		navigate("/");
 	};
 
 	if (!user) {
@@ -105,7 +123,14 @@ const DetailedUser: React.FC = () => {
 					<button
 						type="button"
 						className="bg-slate-900 hover:bg-slate-950 text-white px-4 py-3 w-1/2"
-						onClick={() => handleDelete(user.id)}
+						onClick={() => {
+							const confirmDelete = window.confirm(
+								"Are you sure you want to delete this user?",
+							);
+							if (confirmDelete) {
+								handleDelete(user.id);
+							}
+						}}
 					>
 						Delete
 					</button>
@@ -114,5 +139,4 @@ const DetailedUser: React.FC = () => {
 		</div>
 	);
 };
-
 export default DetailedUser;

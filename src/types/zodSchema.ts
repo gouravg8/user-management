@@ -2,7 +2,9 @@ import { z } from "zod";
 
 const domainRegex =
 	/^(?!:\/\/)([a-zA-Z0-9-_]+(?:\.[a-zA-Z0-9-_]+)*\.[a-zA-Z]{2,})$/;
+
 const userSchema = z.object({
+	id: z.number().optional(),
 	name: z.string().min(3, "Name must be at least 3 characters long"),
 	email: z.string().email("Invalid email address"),
 	phone: z

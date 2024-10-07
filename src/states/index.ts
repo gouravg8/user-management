@@ -2,11 +2,6 @@ import { atom, selector } from "recoil";
 import { initialUserModalData } from "../components/UserModalForm";
 import type { User } from "../types";
 
-const usersAtom = atom({
-	key: "users",
-	default: [initialUserModalData],
-});
-
 const userAtom = atom({
 	key: "user",
 	default: initialUserModalData,
@@ -14,7 +9,7 @@ const userAtom = atom({
 
 const userSelector = selector({
 	key: "userSelector",
-	get: async ({ get }) => {
+	get: async ({ get }): Promise<User> => {
 		const data = get(userAtom);
 		const res = await fetch(
 			`https://jsonplaceholder.typicode.com/users/${data.id}`,
@@ -31,22 +26,17 @@ const userSelector = selector({
 	},
 });
 
-const usersSelector = selector({
-	key: "usersSelector",
-	get: async ({ get }) => {
-		const data = get(usersAtom);
-		const res = await fetch("https://jsonplaceholder.typicode.com/users");
-		const json = await res.json();
+export const usersAtom = atom<User[]>({
+	key: "usersState",
+	default: [initialUserModalData],
+});
 
-		const cleanedData = json.map((user: User) => ({
-			...user,
-			phone: user.phone.split(" ")[0].replace(/[.\-()]/g, ""),
-		}));
-		return cleanedData;
-	},
-	set: ({ set }, newValue) => {
-		set(usersAtom, newValue);
+export const addUserAction = selector<User>({
+	key: "addUserAction",
+	get: ({ get }) => get(usersAtom)[0] || null,
+	set: ({ set }, newUser) => {
+		set(usersAtom, (prev: User[]) => [newUser as User, ...prev]);
 	},
 });
 
-export { usersAtom, usersSelector, userAtom, userSelector };
+export { userAtom, userSelector };

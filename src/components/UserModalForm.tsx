@@ -102,7 +102,7 @@ const UserModalForm: React.FC<UserModalProps> = ({
 			name: "website",
 			lable: "Website",
 			type: "text",
-			placeholder: "https://example.com",
+			placeholder: "example.com",
 			required: false,
 			value: formState.website,
 		},
@@ -137,17 +137,6 @@ const UserModalForm: React.FC<UserModalProps> = ({
 			};
 		});
 	};
-
-	// const onSubmitHandler: SubmitHandler<FormDataType> = async (data) => {
-	// 	setDataSubmitLoading(true);
-	// 	const postData = await axios.post(
-	// 		"https://jsonplaceholder.typicode.com/users",
-	// 		data,
-	// 	);
-	// 	setDataSubmitLoading(false);
-	// 	console.log({ postData });
-	// 	onSubmit();
-	// };
 
 	return (
 		<Modal hasCloseBtn={true} isOpen={isOpen} onClose={onClose}>
@@ -194,14 +183,12 @@ const UserModalForm: React.FC<UserModalProps> = ({
 						)}
 					</div>
 				))}{" "}
-				<div className="">
-					<button
-						className="w-full mx-auto text-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-2 mt-4"
-						type="submit"
-					>
-						{dataSubmitLoading ? "loading..." : "Submit"}
-					</button>
-				</div>
+				<button
+					className="w-full mx-auto text-center bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mb-2 mt-4"
+					type="submit"
+				>
+					{dataSubmitLoading ? "loading..." : "Submit"}
+				</button>
 			</form>
 		</Modal>
 	);
