@@ -3,11 +3,12 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ModalOpner } from "./Modal";
 import type { SubmitHandler } from "react-hook-form";
 import type { FormDataType } from "../types/zodSchema";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { RiArrowLeftLine } from "react-icons/ri";
 import type { User } from "../types";
 import Skeleton from "./Skeleton";
 import Search from "./Search";
+import UserInfoItem from "./UserInfoItem";
 
 const DetailedUser: React.FC = () => {
 	const { userId } = useParams();
@@ -68,7 +69,7 @@ const DetailedUser: React.FC = () => {
 	return (
 		<div className="w-full h-screen mx-auto py-16 bg-slate-800 flex flex-col gap-8">
 			<Search />
-			<Link to="/" className="hover:underline w-fit mx-auto mt-12">
+			<Link to="/" className="w-fit mx-auto mt-12">
 				<h1 className="flex items-center gap-1 font-semibold text-white w-fit border border-orange-800 bg-orange-600 px-4 py-2 rounded-full">
 					<RiArrowLeftLine /> User management
 				</h1>
@@ -80,37 +81,32 @@ const DetailedUser: React.FC = () => {
 					<>
 						<h2 className="text-4xl p-4 font-bold text-white">{user.name}</h2>
 						<div className="px-4 pb-4">
-							<p>
-								<strong className="">Username: </strong>
-								{user.username}
-							</p>
-							<p>
-								<strong className="">Email:</strong> {user.email}
-							</p>
-							<p>
-								<strong className="">Phone:</strong> {user.phone}
-							</p>
-							<p>
-								<strong className="">Website:</strong> {user.website}
-							</p>
-							<h3 className="text-xl font-bold  mt-4">Address</h3>
-							<p>
-								{user.address.street}, {user.address.suite}
-							</p>
-							<p>
-								{user.address.city}, {user.address.zipcode}
-							</p>
+							<UserInfoItem label="Username" value={user.username} />
+							<UserInfoItem label="Email" value={user.email} />
+							<UserInfoItem label="Phone" value={user.phone} />
+							<UserInfoItem label="Website" value={user.website} />
+
+							<h3 className="text-xl font-bold mt-4">Address</h3>
+							<UserInfoItem
+								label="Street"
+								value={`${user.address.street}, ${user.address.suite}`}
+							/>
+							<UserInfoItem
+								label="City"
+								value={`${user.address.city}, ${user.address.zipcode}`}
+							/>
+
 							<h3 className="text-xl font-bold mt-4">Company</h3>
-							<p>
-								<strong className="">Name:</strong> {user.company.name}
-							</p>
-							<p>
-								<strong className="">Catchphrase:</strong>{" "}
-								{user.company.catchPhrase}
-							</p>
-							<p>
-								<strong className="">BS:</strong> {user.company.bs}
-							</p>
+							<UserInfoItem label="Name" value={user.company.name} />
+							{user.company.catchPhrase && (
+								<UserInfoItem
+									label="Catchphrase"
+									value={user.company.catchPhrase}
+								/>
+							)}
+							{user.company.bs && (
+								<UserInfoItem label="BS" value={user.company.bs} />
+							)}
 						</div>
 						<div className="flex justify-arounds align-middle w-full ">
 							<ModalOpner

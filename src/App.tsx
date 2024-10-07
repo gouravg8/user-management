@@ -7,6 +7,7 @@ import type { FormDataType } from "./types/zodSchema";
 import { useEffect, useState } from "react";
 import { IoReload } from "react-icons/io5";
 import Search from "./components/Search";
+import TableSkeleton from "./components/TableSkeleton";
 
 function App() {
 	const [users, setUsers] = useState([]);
@@ -17,13 +18,15 @@ function App() {
 
 	useEffect(() => {
 		async function fetchData() {
+			setIsLoading(true);
 			const res = await fetch("https://jsonplaceholder.typicode.com/users");
 			const data = await res.json();
 			localStorage.setItem("users", JSON.stringify(data));
 			setUsers(data);
 			console.log(data);
+			setIsLoading(false);
 		}
-		if (!usersFromLocalStorage) {
+		if (usersFromLocalStorage.length === 0) {
 			fetchData();
 		}
 	}, [usersFromLocalStorage]);
@@ -35,7 +38,10 @@ function App() {
 				"https://jsonplaceholder.typicode.com/users",
 				data,
 			);
-			localStorage.setItem("users", JSON.stringify([postData.data, ...users]));
+			localStorage.setItem(
+				"users",
+				JSON.stringify([postData.data, ...usersFromLocalStorage]),
+			);
 			console.log("New user added:", postData.data, postData);
 			setIsLoading(false);
 		} catch (error) {
@@ -45,7 +51,7 @@ function App() {
 	};
 
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <TableSkeleton />;
 	}
 
 	const handleReload = async () => {
