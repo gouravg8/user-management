@@ -12,7 +12,6 @@ import {
 import DetailedUser from "./components/DetailedUser.tsx";
 import { getUsers } from "./utils/getUsers.ts";
 import ErrorPage from "./components/Error.tsx";
-import { RecoilRoot } from "recoil";
 import type { User } from "./types/index.ts";
 
 const router = createBrowserRouter(
@@ -36,8 +35,6 @@ createRoot(
 	document.getElementById("root") || document.createElement("div"),
 ).render(
 	<StrictMode>
-		<RecoilRoot>
-			<RouterProvider router={router} />
-		</RecoilRoot>
+		<RouterProvider router={router} />
 	</StrictMode>,
 );
