@@ -4,20 +4,7 @@ import { useForm } from "react-hook-form";
 import { type FormDataType, userSchema } from "../types/zodSchema";
 import { Modal } from "./Modal";
 import type { UserModalProps, User, FieldType } from "../types";
-
-export const initialUserModalData: User = {
-	id: 0,
-	name: "",
-	email: "",
-	phone: "",
-	username: "",
-	address: {
-		street: "",
-		city: "",
-	},
-	company: { name: "" },
-	website: "",
-};
+import { initialUserModalData } from "../constants";
 
 const UserModalForm: React.FC<UserModalProps> = ({
 	data,

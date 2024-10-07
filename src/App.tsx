@@ -10,7 +10,6 @@ import Search from "./components/Search";
 import TableSkeleton from "./components/TableSkeleton";
 
 function App() {
-	const [users, setUsers] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const usersFromLocalStorage = JSON.parse(
 		localStorage.getItem("users") || "[]",
@@ -22,7 +21,6 @@ function App() {
 			const res = await fetch("https://jsonplaceholder.typicode.com/users");
 			const data = await res.json();
 			localStorage.setItem("users", JSON.stringify(data));
-			setUsers(data);
 			console.log(data);
 			setIsLoading(false);
 		}
@@ -58,7 +56,6 @@ function App() {
 		const res = await fetch("https://jsonplaceholder.typicode.com/users");
 		const data = await res.json();
 		localStorage.setItem("users", JSON.stringify(data));
-		setUsers(data);
 	};
 
 	return (

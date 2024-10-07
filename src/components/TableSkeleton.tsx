@@ -5,7 +5,7 @@ const TableSkeleton: React.FC = () => {
 		<div className="w-full px-8 bg-slate-700 h-screen text-white items-center rounded z-20">
 			<div className="animate-pulse py-44">
 				<div className="bg-gray-300 h-10 w-full mb-4 rounded" />
-				{[...Array(5)].map((_) => (
+				{[...Array(5)].map(() => (
 					<div
 						key={`row-${crypto.randomUUID()}`}
 						className="flex justify-center space-x-4 mb-4"

@@ -29,7 +29,7 @@ const DetailedUser: React.FC = () => {
 		if (filtredUser) {
 			filtredUser.phone = filtredUser.phone
 				.split(" ")[0]
-				.replace(/[\-.()]/g, "");
+				.replace(/[-.()]/g, "");
 		}
 		setUserData(filtredUser);
 		setTimeout(() => {

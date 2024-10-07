@@ -25,7 +25,7 @@ const Table = () => {
 											<Link to={`/user/${user.id}`}>{user.name}</Link>
 										</td>
 										<td className="">
-											{user.phone.split(" ")[0].replace(/[\-.()]/g, "")}
+											{user.phone.split(" ")[0].replace(/[-.()]/g, "")}
 										</td>
 									</tr>
 								);
