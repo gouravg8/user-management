@@ -24,7 +24,9 @@ const Table = () => {
 										<td className="pl-2 py-1.5 md:py-2">
 											<Link to={`/user/${user.id}`}>{user.name}</Link>
 										</td>
-										<td className="">{user.phone}</td>
+										<td className="">
+											{user.phone.split(" ")[0].replace(/[\-.()]/g, "")}
+										</td>
 									</tr>
 								);
 							})}

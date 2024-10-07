@@ -23,8 +23,6 @@ const Search: React.FC = () => {
 	}, [searchTerm]);
 
 	const handleClick = (userId: number) => {
-		console.log(userId);
-
 		navigate(`/user/${userId}`);
 		setSearchTerm("");
 	};

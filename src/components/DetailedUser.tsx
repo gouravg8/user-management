@@ -45,7 +45,6 @@ const DetailedUser: React.FC = () => {
 		localStorage.setItem("users", JSON.stringify(updatedUsers));
 
 		setUserData(data as User);
-		console.log({ data });
 		setIsLoading(false);
 	};
 
@@ -74,7 +73,7 @@ const DetailedUser: React.FC = () => {
 					<RiArrowLeftLine /> User management
 				</h1>
 			</Link>
-			<div className="w-11/12 md:p-8 md:w-1/2 mx-auto bg-slate-700 shadow-lg rounded-lg overflow-hidden text-white">
+			<div className="w-11/12 pt-6 md:px-8 md:py-6 md:w-1/2 mx-auto bg-slate-700 shadow-lg rounded-lg overflow-hidden text-white">
 				{isLoading ? (
 					<Skeleton />
 				) : (
@@ -108,16 +107,16 @@ const DetailedUser: React.FC = () => {
 								<UserInfoItem label="BS" value={user.company.bs} />
 							)}
 						</div>
-						<div className="flex justify-arounds align-middle w-full ">
+						<div className="flex justify-arounds align-middle w-full md:mt-4 md:mx-auto md:gap-2 ">
 							<ModalOpner
 								modalTitle="Edit"
 								data={user}
-								classNames="bg-slate-900 hover:bg-slate-950 text-white px-4 py-4 w-1/2"
+								classNames="bg-slate-900 hover:bg-slate-950 text-white px-4 py-4 w-1/2 md:rounded-md"
 								onSubmitHandler={onSubmitHandler}
 							/>
 							<button
 								type="button"
-								className="bg-slate-900 hover:bg-slate-950 text-white px-4 py-3 w-1/2"
+								className="bg-slate-900 hover:bg-slate-950 text-white px-4 py-3 w-1/2 md:rounded-md"
 								onClick={() => {
 									const confirmDelete = window.confirm(
 										"Are you sure you want to delete this user?",
