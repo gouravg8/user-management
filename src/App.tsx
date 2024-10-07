@@ -6,6 +6,7 @@ import type { SubmitHandler } from "react-hook-form";
 import type { FormDataType } from "./types/zodSchema";
 import { useEffect, useState } from "react";
 import { IoReload } from "react-icons/io5";
+import Search from "./components/Search";
 
 function App() {
 	const [users, setUsers] = useState([]);
@@ -56,6 +57,7 @@ function App() {
 
 	return (
 		<div className="flex flex-col gap-8 bg-slate-800 justify-start py-16 h-screen">
+			<Search />
 			<h1
 				onClick={handleReload}
 				onKeyDown={(e) => {
@@ -63,7 +65,7 @@ function App() {
 						handleReload();
 					}
 				}}
-				className="flex gap-1 items-center font-semibold text-white border w-fit mx-auto border-orange-800 bg-orange-600 px-4 py-2 rounded-full"
+				className="flex gap-1 items-center font-semibold text-white border w-fit mx-auto border-orange-800 bg-orange-600 px-4 py-2 rounded-full mt-12 z-20"
 			>
 				<IoReload />
 				User management
