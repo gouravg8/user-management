@@ -1,11 +1,12 @@
 import type React from "react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { User } from "../types";
 
 const Search: React.FC = () => {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [searchResults, setSearchResults] = useState<User[]>([]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const users: User[] = JSON.parse(localStorage.getItem("users") || "[]");
@@ -18,6 +19,13 @@ const Search: React.FC = () => {
 			setSearchResults([]);
 		}
 	}, [searchTerm]);
+
+	const handleClick = (userId: number) => {
+		console.log(userId);
+
+		navigate(`/user/${userId}`);
+		setSearchTerm("");
+	};
 
 	return (
 		<>
@@ -37,14 +45,15 @@ const Search: React.FC = () => {
 						{searchResults.map((user) => (
 							<li
 								key={user.id}
-								className="border-b p-1 border-gray-800 text-white last:border-b-0 animate-fadeIn"
+								className="border-b p-2.5 border-gray-800 text-white last:border-b-0 animate-fadeIn "
+								onClick={() => handleClick(user.id)}
+								onKeyDown={(e) => {
+									if (e.key === "Enter" || e.key === " ") {
+										handleClick(user.id);
+									}
+								}}
 							>
-								<Link
-									to={`/user/${user.id}`}
-									className="block px-4 py-2 hover:bg-gray-100"
-								>
-									{user.name}
-								</Link>
+								{user.name}
 							</li>
 						))}
 					</ul>
