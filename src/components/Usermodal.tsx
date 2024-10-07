@@ -20,6 +20,7 @@ const UserTable: React.FC = () => {
 			})
 			.catch((error) => {
 				console.error("Error fetching users:", error);
+				alert("s fetching users");
 			});
 	}, []);
 

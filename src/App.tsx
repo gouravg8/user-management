@@ -39,6 +39,7 @@ function App() {
 			setIsLoading(false);
 		} catch (error) {
 			console.error("Error adding new user:", error);
+			alert("Error adding new user");
 		}
 	};
 

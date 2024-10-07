@@ -14,6 +14,7 @@ async function getUsers() {
 		return users;
 	} catch (error) {
 		console.log(error);
+		alert("Error fetching users");
 	}
 }
 
@@ -29,6 +30,7 @@ async function getUserDetails(userId: number) {
 		return user;
 	} catch (error) {
 		console.log(error);
+		alert("Error fetching user details");
 	}
 }
 
